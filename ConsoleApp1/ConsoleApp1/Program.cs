@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -74,6 +74,8 @@ namespace ConsoleApp1
 
             Console.ReadKey();
         }
+
+        
 
 
     }

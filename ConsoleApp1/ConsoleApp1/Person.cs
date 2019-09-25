@@ -1,9 +1,9 @@
 ﻿namespace ConsoleApp1
 {
-    internal class Person
+    public class Person
     {
-        private string Firstname;
-        private string Lastname;
+        public string Firstname;
+        public string Lastname;
         public ShoppingCart ShoppingCart { get; set; }
 
         public Person(string firstname, string lastname)
@@ -15,6 +15,22 @@
         public override string ToString()
         {
             return Firstname;
+        }
+
+        public Color FavoriteColor { get; set; }
+
+
+        public enum Color
+        {
+            Unknown,
+            Red,
+            Orange,
+            Yellow,
+            Green,
+            Blue,
+            Violete,
+            White,
+            Black
         }
 
         

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ConsoleApp1
 {
-    internal class ShoppingCart
+    public class ShoppingCart
     {
 
         private List<Food> Items { get; set; }
