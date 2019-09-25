@@ -35,10 +35,14 @@ namespace FavoriteColor
             Enum.TryParse(answer, true, out Color favoriteColor);
             someone.FavoriteColor = favoriteColor;
 
-            using (StreamWriter file = new StreamWriter("output.txt"))
+            string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
+
+            using (StreamWriter file = new StreamWriter(path))
             {
                 file.WriteLine($"{someone.Firstname} {someone.Lastname} Fav color: {someone.FavoriteColor}");
             }
+
+            
         }
     }
 }
