@@ -21,16 +21,39 @@ namespace Test1
         {
             students.Add(student);
             student.IsStudying = true;
+            ChangeStatus(student, Student.Status.Studing);
+            student.GroupName = Name;
+
         }
+
+        public void ChangeStatus (Student student, Student.Status newStatus)
+        {
+            student.StudentStatus = newStatus;
+        }
+
+        public void RemoveStudent (Student student, Student.Status newStatus)
+        {
+            foreach (Student element in students)
+            {
+                if (element==student)
+                {
+                    ChangeStatus(student, newStatus);
+                    students.Remove(element);
+                    student.GroupName = "none";
+                    break;
+                }
+            }
+        }
+
+ 
 
         public void Print()
         {
-            Console.WriteLine(Name);
-            Console.WriteLine("---------------------");
             foreach (Student element in students)
             {
-                Console.WriteLine($"{element.FirstName} {element.LastName}");
+                Console.WriteLine(element);
             }
+          
         }
 
   
