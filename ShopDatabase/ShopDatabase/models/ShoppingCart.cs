@@ -25,5 +25,10 @@ namespace ShopDatabase.models
             Items.Add(food);
             Sum += food.Price;
         }
+
+        public void PrintCollection()
+        {
+
+        }
     }
 }
