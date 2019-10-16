@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="dbContext\ShopDbContext.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="models\Food.cs" />
     <Compile Include="models\ShoppingCart.cs" />
     <Compile Include="Program.cs" />
