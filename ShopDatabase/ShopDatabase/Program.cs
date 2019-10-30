@@ -64,27 +64,62 @@ namespace ShopDatabase
                     }
                 }
 
+
+
+
+
+
+
+
+
+                //    Console.WriteLine("-----------------------------------");
+                //carts = db.ShoppingCarts.Include("Items").OrderByDescending(x => x.DateCreated).ToList();
+                //Console.WriteLine($"Created on {carts[0].DateCreated}");
+                //Console.WriteLine(carts[0].Items);
+
+                //foreach (Food food in carts[0].Items)
+                //{
+                //    Console.WriteLine("test");
+                //    Console.WriteLine($"Name: {food.Name} Price: {food.Price}");
+                //}
+
+                System.Data.Entity.Infrastructure.DbQuery<ShoppingCart> shcarts = db.ShoppingCarts;
+                System.Data.Entity.Infrastructure.DbQuery<ShoppingCart> cartsWithItems = db.ShoppingCarts.Include("Items");
+                System.Data.Entity.Infrastructure.DbQuery<Food> foods = db.Foods;
+
                 //1.show only the last(latest created) shopping cart with all its items
+                ShoppingCart latest = cartsWithItems.OrderBy(cart => cart.DateCreated).ToList().First(); //lamda expression
+                //or
+                ShoppingCart latest2 = cartsWithItems.OrderBy(cart => cart.DateCreated).ToList().Last();
+
                 //2.show only the carts with sum > 5
-                //3.show only the carts with more than one item in it(and how many items is in cart)
-                //4.show only the carts that contain apples
-                //5.show the total number of shopping carts
-                //6.show the cart with maximum sum
-                //7.show the cheapest food
-
-                    Console.WriteLine("-----------------------------------");
-                carts = db.ShoppingCarts.Include("Items").OrderByDescending(x => x.DateCreated).ToList();
-                Console.WriteLine($"Created on {carts[0].DateCreated}");
-                Console.WriteLine(carts[0].Items);
-
-                foreach (Food food in carts[0].Items)
+                List<ShoppingCart> largerThanFive = shcarts.Where(cart => cart.Sum > 5).ToList();
+                foreach (var cart in largerThanFive)
                 {
-                    Console.WriteLine("test");
-                    Console.WriteLine($"Name: {food.Name} Price: {food.Price}");
+                    Console.WriteLine($"ShoppingCart {cart.DateCreated} {cart.Sum}");
                 }
 
+                //3.show only the carts with more than one item in it(and how many items is in cart)
+                IQueryable<ShoppingCart> cartsMoreThanOne = cartsWithItems.Where(cart => cart.Items.Count() > 1);
+                foreach (var cart in cartsMoreThanOne)
+                {
+                    Console.WriteLine(cart.DateCreated);
+                }
 
+                // LINQ
+                cartsMoreThanOne = from cart in cartsWithItems where cart.Items.Count() > 1 select cart;
 
+                //4.show only the carts that contain apples
+                IQueryable<ShoppingCart> cartsWithApples = cartsWithItems.Where(cart => cart.Items.Any(y => y.Name == "apple"));
+
+                //5.show the total number of shopping carts
+                int totalShCatrs = shcarts.Count();
+
+                //6.show the cart with maximum sum
+                ShoppingCart maxSumShoppingcart = shcarts.OrderByDescending(cart => cart.Sum).FirstOrDefault();
+
+                //7.show the cheapest food
+                Food cheapestFood = foods.OrderBy(food => food.Price).FirstOrDefault();
 
                 Console.ReadLine();
             }
