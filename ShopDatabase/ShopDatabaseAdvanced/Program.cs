@@ -37,7 +37,19 @@ namespace ShopDatabaseAdvanced
                 while (Console.ReadLine().ToLower() == "y");
 
                 db.SaveChanges();
+
+                var shoppingCarts = db.ShoppingCarts.Include("Items");
+                foreach (var cart in shoppingCarts)
+                {
+                    Console.WriteLine(cart.DateCreated);
+                    foreach(var food in cart.Items)
+                    {
+                        Console.WriteLine(food.Name);
+                    }
+                }
             }
+
+            
 
 
         }
