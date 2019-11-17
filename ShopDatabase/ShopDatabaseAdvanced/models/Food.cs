@@ -12,8 +12,8 @@ namespace ShopDatabaseAdvanced.models
         public string Name { get; set; }
         public double Price { get; set; }
 
-        //ONE cart has MANY foods
-        public virtual ShoppingCart ShoppingCart { get; set; }
+        //MANY carts has MANY foods
+        public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; }
         //public Guid ShoppingCartId { get; set; } //Foreign Key 
 
 
@@ -26,6 +26,9 @@ namespace ShopDatabaseAdvanced.models
             Price = price;
         }
 
-        public Food() { }
+        public Food()
+        {
+            FoodId = Guid.NewGuid();
+        }
     }
 }

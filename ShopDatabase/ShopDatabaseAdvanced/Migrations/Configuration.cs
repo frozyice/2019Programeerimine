@@ -1,4 +1,4 @@
-﻿namespace ShopDatabase.Migrations
+﻿namespace ShopDatabaseAdvanced.Migrations
 {
     using ShopDatabaseAdvanced.models;
     using System;
@@ -11,8 +11,6 @@
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            ContextKey = "ShopDatabaseAdvanced.ShopDbContext";
-            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(ShopDatabaseAdvanced.ShopDbContext context)

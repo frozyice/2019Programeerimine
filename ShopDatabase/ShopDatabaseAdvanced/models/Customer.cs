@@ -20,6 +20,7 @@ namespace ShopDatabaseAdvanced.models
             CustomerId = Guid.NewGuid();
             ShoppingCarts = new List<ShoppingCart>();
         }
+
     }
 
     
