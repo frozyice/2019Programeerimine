@@ -18,5 +18,7 @@ namespace ShopDatabaseAdvanced.ShopDatabaseAdvanced
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         public DbSet<Food> Foods { get; set; }
+
+        public virtual DbSet<Customer> Customers { get; set; }
     }
 }

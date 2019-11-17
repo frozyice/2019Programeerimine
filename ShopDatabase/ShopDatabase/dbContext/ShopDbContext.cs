@@ -17,7 +17,9 @@ namespace ShopDatabase
         }
 
         public DbSet<ShoppingCart> ShoppingCarts {get;set;}
-        public DbSet<Food> Foods { get; set; }
+        public DbSet<Food> Items { get; set; }
+
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

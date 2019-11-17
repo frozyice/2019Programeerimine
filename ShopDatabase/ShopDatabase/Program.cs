@@ -85,7 +85,7 @@ namespace ShopDatabase
 
                 System.Data.Entity.Infrastructure.DbQuery<ShoppingCart> shcarts = db.ShoppingCarts;
                 System.Data.Entity.Infrastructure.DbQuery<ShoppingCart> cartsWithItems = db.ShoppingCarts.Include("Items");
-                System.Data.Entity.Infrastructure.DbQuery<Food> foods = db.Foods;
+                System.Data.Entity.Infrastructure.DbQuery<Food> foods = db.Items;
 
                 //1.show only the last(latest created) shopping cart with all its items
                 ShoppingCart latest = cartsWithItems.OrderBy(cart => cart.DateCreated).ToList().First(); //lamda expression
