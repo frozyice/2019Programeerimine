@@ -12,15 +12,6 @@ namespace ShopDatabaseAdvanced
     {
         static void Main(string[] args)
         {
-            //List<Food> groceries = new List<Food>
-            //{
-            //new Food("apple", 1.7),
-            //new Food("bread", 1.2),
-            //new Food("cheese", 2),
-            //new Food("milk",1),
-            //new Food("icecream",1.5)
-            //};
-
             //Ask client's name and greet him or her by name
             Console.WriteLine("Your fullname please: ");
             string fullName = Console.ReadLine();
@@ -28,18 +19,15 @@ namespace ShopDatabaseAdvanced
             string[] name = fullName.Split(separator,2, StringSplitOptions.RemoveEmptyEntries);
             string firstName = name[0];
             string lastName = name[1];
-            
+
+            Console.Clear();
             Console.WriteLine($"Hello {ToFirstUpper(firstName)}!");
+            Console.WriteLine("Please wait...");
 
             using (ShopDbContext db = new ShopDbContext())
             {
 
                 DbQuery<Customer> customersFromDb = db.Customers;
-                
-                
-
-               
-
 
                 //Determine if this client exists in the database
                 Customer currentCustomer;
@@ -50,7 +38,7 @@ namespace ShopDatabaseAdvanced
                 {
                     //If client doesn't exist, add him or her to the database
                     isNewCustomer = true;
-                    Console.WriteLine("customer is not in database");
+                    //Console.WriteLine("customer is not in database");
                     currentCustomer = new Customer();
                     currentCustomer.FirstName = firstName;
                     currentCustomer.LastName = lastName;
@@ -59,10 +47,10 @@ namespace ShopDatabaseAdvanced
                 else
                 {
                     isNewCustomer = false;
-                    Console.WriteLine("customer is in database");
+                    //Console.WriteLine("customer is in database");
                     currentCustomer = customerInDatabase;
                 }
-                Console.WriteLine(currentCustomer.FirstName+" "+currentCustomer.LastName);
+                //Console.WriteLine(currentCustomer.FirstName+" "+currentCustomer.LastName);
 
                 //Create a new Shopping Cart and let your client do the shopping.
                 ShoppingCart newShoppingCart = new ShoppingCart();
@@ -70,27 +58,73 @@ namespace ShopDatabaseAdvanced
                 if (isNewCustomer)
                     db.Customers.Add(currentCustomer);
                 db.SaveChanges();
+                Console.Clear();
 
                 DbQuery<Food> FoodsFromDb = db.Foods;
-                Food foodInDatabase = (FoodsFromDb.FirstOrDefault(food => food.Name == "apple"));
-                newShoppingCart.Foods.Add(foodInDatabase);
+                do
+                {
+                    ChooseFood(FoodsFromDb, newShoppingCart);
+                }
+                while (Console.ReadLine().ToLower() == "y");
                 db.SaveChanges();
 
                 //Show the contents of the current shopping cart together with the its total price.
-                DbQuery<ShoppingCart> ShopingCartsWithFoodFromDb = db.ShoppingCarts.Include("Foods");
-
-                Console.WriteLine("All carts-----------------");
-                foreach (ShoppingCart cart in ShopingCartsWithFoodFromDb)
+                Console.Clear();
+                Console.WriteLine("Your current shopping cart:");
+                foreach (Food food in newShoppingCart.Foods)
                 {
-                    Console.WriteLine(cart.DateCreated);
-                    foreach (Food food in cart.Foods)
-                    {
-                        if (food!=null) Console.WriteLine(food.Name);
-                    }
-                   
+                    Console.WriteLine(food.Name);
                 }
+                Console.WriteLine("Total Sum: " + newShoppingCart.Sum);
+                Console.WriteLine("----------------------------------");
 
-                
+                //Determine, how many times your current client has visited the shop
+
+                int shoppingCount = db.ShoppingCarts.Where(cart => cart.Customer.CustomerId == currentCustomer.CustomerId).Count();
+                if (shoppingCount == 1)
+                    Console.WriteLine("This is Your first visit!");
+                else
+                {
+                    Console.WriteLine("Your Total visits: " + shoppingCount);
+                    //Ask him/her, if he/she wants to see his/her shopping history
+                    Console.WriteLine("Do You like to see Your shopping history? y/n");
+                    if (Console.ReadLine().ToLower() == "y")
+                    {
+                        DbQuery<ShoppingCart> ShopingCartsWithFoodFromDb = db.ShoppingCarts.Include("Foods");
+
+                        List<ShoppingCart> CurrentCustomersShoppingCarts = ShopingCartsWithFoodFromDb.Where(cart => cart.Customer.CustomerId == currentCustomer.CustomerId).OrderByDescending(cart => cart.DateCreated).ToList();
+                        Console.Clear();
+                        foreach (ShoppingCart cart in CurrentCustomersShoppingCarts)
+                        {
+                            Console.WriteLine(cart.DateCreated);
+                            foreach (Food food in cart.Foods)
+                            {
+                                Console.WriteLine(food.Name);
+                            }
+                            Console.WriteLine("Total Sum: "+cart.Sum);
+                            Console.WriteLine("----------------------------------");
+                        }
+
+                    }
+                }
+                //Thank your client for visiting and wish him or her a nice day!
+                Console.WriteLine($"Thank You for Visiting {firstName}, have a nice day!");
+
+                //all shoping history
+                //DbQuery<ShoppingCart> ShopingCartsWithFoodFromDb = db.ShoppingCarts.Include("Foods");
+
+                //Console.WriteLine("-----------------");
+                //foreach (ShoppingCart cart in ShopingCartsWithFoodFromDb)
+                //{
+                //    Console.WriteLine(cart.DateCreated);
+                //    foreach (Food food in cart.Foods)
+                //    {
+                //        if (food!=null) Console.WriteLine(food.Name);
+                //    }
+
+                //}
+
+
 
 
             }
@@ -100,13 +134,16 @@ namespace ShopDatabaseAdvanced
 
         }
 
-        private static void ChooseFood(ShopDbContext db, ShoppingCart newShoppingCart)
+        private static void ChooseFood(DbQuery<Food> foodsFromDb, ShoppingCart newShoppingCart)
         {
             Console.WriteLine("What do you want to buy? ");
             string foodName = Console.ReadLine().ToLower();
-            Food chosenFood = db.Foods.FirstOrDefault(x => x.Name == foodName);
-            newShoppingCart.AddToCard(chosenFood);
-            Console.WriteLine("Anything else? Y/N");
+            Food chosenFood = foodsFromDb.FirstOrDefault(x => x.Name == foodName);
+            if (chosenFood!=null)
+                newShoppingCart.AddToCard(chosenFood);
+            else
+                Console.WriteLine("We don't have this!");
+            Console.WriteLine("Anything else? y/n");
         }
 
         private static string ToFirstUpper(string input)
