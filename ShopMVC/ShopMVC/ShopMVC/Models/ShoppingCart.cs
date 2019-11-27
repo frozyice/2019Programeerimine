@@ -15,7 +15,7 @@ namespace ShopMVC.Models
 
         public ShoppingCart()
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
             Sum = 0;
             DateCreated = DateTime.Now;
             Foods = new List<Food>();

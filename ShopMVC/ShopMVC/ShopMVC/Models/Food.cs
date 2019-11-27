@@ -15,7 +15,7 @@ namespace ShopMVC.Models
 
         public Food()
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
         }
     }
 }
